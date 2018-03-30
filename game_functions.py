@@ -28,8 +28,25 @@ def check_keyup_events(event,ship):
         ship.moving_right=False
     elif event.key==pygame.K_LEFT:
         ship.moving_left=False
+def check_play_button(ai_settings,screen,stats,play_button,ship,aliens,bullets,mouse_x,mouse_y):
+    #在玩家单击Play按钮时开始游戏
+    button_clicked=play_button.rect.collidepoint(mouse_x,mouse_y)
+    
+    if button_clicked and not stats.game_active:
+        #隐藏光标
+        pygame.mouse.set_visible(False)
 
-def check_events(ai_settings,screen,ship,bullets):
+        #重置游戏统计信息
+        stats.reset_stats()
+        stats.game_active=True
+        #清空外星人列表和子弹列表
+        aliens.empty()
+        bullets.empty()
+        #创建一群新的外星人,并让飞船居中
+        create_fleet(ai_settings,screen,ship,aliens)
+        ship.center_ship()
+
+def check_events(ai_settings,screen,stats,play_button,ship,aliens,bullets):
     #响应按键和鼠标事件
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -39,6 +56,9 @@ def check_events(ai_settings,screen,ship,bullets):
             check_keydown_events(event,ai_settings,screen,ship,bullets)
         elif event.type==pygame.KEYUP:
             check_keyup_events(event,ship)
+        elif event.type==pygame.MOUSEBUTTONDOWN:
+            mouse_x,mouse_y=pygame.mouse.get_pos()
+            check_play_button(ai_settings,screen,stats,play_button,ship,aliens,bullets,mouse_x,mouse_y)
     
 def update_screen(ai_settings,screen,stats,ship,aliens,bullets,play_button):
     
@@ -114,6 +134,7 @@ def ship_hit(ai_settings,stats,screen,ship,aliens,bullets):
         ship.center_ship()
     else:
         stats.game_active=False
+        pygame.mouse.set_visible(True)
 
     #暂停
     sleep(0.5)
