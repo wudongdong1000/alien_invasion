@@ -32,7 +32,6 @@ class Ship():
         #根据self.center更新rect对象
         self.rect.centerx=self.center
         
-
     def blitme(self):
         #在指定位置绘制飞船
         
