@@ -10,6 +10,7 @@ from scoreboard import Scoreboard
 def run_game():
     #初始化pygame、设置和屏幕对象
     pygame.init()
+    pygame.mixer.init()
     ai_settings=Settings()
     screen=pygame.display.set_mode((ai_settings.screen_width,
     ai_settings.screen_height))
@@ -30,12 +31,11 @@ def run_game():
     while True:
         gf.update_screen(ai_settings,screen,stats,ship,sb,aliens,bullets,play_button)
         #监视键盘和鼠标事件
-        gf.check_events(ai_settings,screen,stats,play_button,ship,aliens,bullets)
+        gf.check_events(ai_settings,screen,stats,play_button,ship,sb,aliens,bullets)
         if stats.game_active:
             ship.update()
             gf.update_bullets(ai_settings,screen,stats,sb,ship,bullets,aliens)
             gf.update_aliens(ai_settings,stats,screen,ship,sb,aliens,bullets)
         
-       
 run_game()
 

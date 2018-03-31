@@ -14,11 +14,11 @@ class Bullet(Sprite):
         ai_settings.bullet_height)
         self.rect.centerx=ship.rect.centerx
         self.rect.top=ship.rect.top
-
          #存储用小数表示的子弹位置
         self.y=float(self.rect.y)
         self.color=ai_settings.bullet_color
         self.speed_factor=ai_settings.bullet_speed_factor
+        
     def update(self):
         #向上移动子弹
         #更新表示子弹位置的小数值
