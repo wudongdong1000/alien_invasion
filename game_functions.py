@@ -122,11 +122,12 @@ def get_number_rows(ai_settings,ship_height,alien_height):
     number_rows=int(avaiable_space_y/(2*alien_height))
     return number_rows
 
-def ship_hit(ai_settings,stats,screen,ship,aliens,bullets):
+def ship_hit(ai_settings,stats,screen,ship,sb,aliens,bullets):
     #响应被外星人撞到的飞船
     #将ship_left减1
     if stats.ships_left>0:
         stats.ships_left-=1
+        sb.prep_ships()
 
         #清空外星人列表和子弹列表
         aliens.empty()
@@ -141,26 +142,26 @@ def ship_hit(ai_settings,stats,screen,ship,aliens,bullets):
 
     #暂停
     sleep(0.5)
-def check_aliens_bottom(ai_settings,stats,screen,ship,aliens,bullets):
+def check_aliens_bottom(ai_settings,stats,screen,ship,sb,aliens,bullets):
     #检查是否有外星人到达了屏幕底端
     screen_rect=screen.get_rect()
     for alien in aliens.sprites():
         if alien.rect.bottom>=screen_rect.bottom:
             #像飞船被撞到一样进行处理
-            ship_hit(ai_settings,stats,screen,ship,aliens,bullets)
+            ship_hit(ai_settings,stats,screen,ship,sb,aliens,bullets)
             break
     
 
-def update_aliens(ai_settings,stats,screen,ship,aliens,bullets):
+def update_aliens(ai_settings,stats,screen,ship,sb,aliens,bullets):
     #检查是否有外星人位于屏幕边缘，并更新整群外星人的位置
     check_fleet_edges(ai_settings,aliens)
     #更新外星人群中所有外新人的位置
     aliens.update()
     #检查外星人和飞船之间的碰撞
     if pygame.sprite.spritecollideany(ship,aliens):
-        ship_hit(ai_settings,stats,screen,ship,aliens,bullets)
+        ship_hit(ai_settings,stats,screen,ship,sb,aliens,bullets)
     #检查是否有外星人到达屏幕底端
-    check_aliens_bottom(ai_settings,stats,screen,ship,aliens,bullets)
+    check_aliens_bottom(ai_settings,stats,screen,ship,sb,aliens,bullets)
 def check_fleet_edges(ai_settings,aliens):
     #有外星人到达屏幕边缘时采取相应措施
     for alien in aliens.sprites():
@@ -182,9 +183,15 @@ def check_bullet_alien_collisions(ai_settings,screen,stats,sb,ship,bullets,alien
 
             stats.score+=ai_settings.alien_points*len(aliens)
             sb.prep_score()
+        check_high_score(stats,sb)
     if len(aliens)==0:
         #删除现有的子弹并新建一群外星人,并加快游戏节奏
         bullets.empty()
         ai_settings.increase_speed()
         create_fleet(ai_settings,screen,ship,aliens)
 
+def check_high_score(stats,sb):
+    """检查是否诞生了新的最高得分"""
+    if stats.score>stats.high_score:
+        stats.high_score=stats.score
+        sb.prep_high_score()

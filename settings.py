@@ -8,7 +8,7 @@ class Settings():
         self.screen_height=700
         self.bg_color=(230,230,230)
         #飞船设置
-        self.ship_limit=3
+        self.ship_limit=2
         #子弹设置
         self.bullet_width=300
         self.bullet_height=15
@@ -36,8 +36,8 @@ class Settings():
         #提高速度设置
         self.ship_speed_factor*=self.speedup_scale
         self.bullet_speed_factor*=self.speedup_scale
-        self.alien_speed_factor+=1
-        self.fleet_drop_speed+=5
+        self.alien_speed_factor*=self.speedup_scale
+        self.fleet_drop_speed+=1
 
         self.alien_points=int(self.alien_points*self.score_sccale)
 
